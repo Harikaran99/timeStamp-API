@@ -12,6 +12,7 @@ app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 20
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
+app.use(express.urlencoded({extended: false}))
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
@@ -26,28 +27,22 @@ app.get("/api/hello", function (req, res) {
 
 app.get("/api/:date", (req, res) => {
   let date = req.params.date
-
   //handle api/:date path functions 
 function identifyDate(date){
-  const lookForAlpha = /[^\d-]/gm
   const lookForGroups = date.match(/\d+/g)
-  const alphaResult = lookForAlpha.test(date)
-  console.log(alphaResult)
+  const specialCase = new Date(`${date}`)
 
-  if(alphaResult || lookForGroups.length > 3) return "Sus Thing!" 
+  if(specialCase == "Invalid Date" || lookForGroups.length > 3) return "Sus Thing!" 
   else if(lookForGroups.length == 1 ) return "unix Date" 
-  else if(!alphaResult && lookForGroups.length > 1) return "Normal Date"
+  else if(specialCase != "Invalid Date" && lookForGroups.length > 1) return "Normal Date"
   
 }
-
-console.log(identifyDate(date))
 
 const dateSetter = {
   "Normal Date": () => {
   
-    const datestring = `${date}T00:00:00Z`
+    const datestring = `${date}`
     date = new Date(datestring)
-    console.log(date)
     return {
       unix: date*1,
       utc: date.toUTCString()
