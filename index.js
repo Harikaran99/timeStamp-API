@@ -39,7 +39,7 @@ function identifyDate(date){
   
     
 }
-//iii
+
 const dateSetter = {
   "Normal Date": () => {
     const dateArray = date.split("-").map(x => Number(x))
