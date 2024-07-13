@@ -32,22 +32,22 @@ function identifyDate(date){
   const lookForAlpha = /[^\d-]/gm
   const lookForGroups = date.match(/\d+/g)
   const alphaResult = lookForAlpha.test(date)
+  console.log(alphaResult)
 
-  if(lookForGroups.length == 1 ) return "unix Date" 
+  if(alphaResult || lookForGroups.length > 3) return "Sus Thing!" 
+  else if(lookForGroups.length == 1 ) return "unix Date" 
   else if(!alphaResult && lookForGroups.length > 1) return "Normal Date"
-  else if(alphaResult || lookForGroups > 3) return "Sus Thing!" 
   
-    
 }
+
+console.log(identifyDate(date))
 
 const dateSetter = {
   "Normal Date": () => {
-    const dateArray = date.split("-").map(x => Number(x))
-    date = new Date()
-    dateArray[2] ? date.setUTCDate(dateArray[2]) : undefined
-    dateArray[1] ? date.setUTCMonth(dateArray[1] - 1) : undefined
-    dateArray[0] ?  date.setUTCFullYear(dateArray[0]) : undefined
-
+  
+    const datestring = `${date}T00:00:00Z`
+    date = new Date(datestring)
+    console.log(date)
     return {
       unix: date*1,
       utc: date.toUTCString()
@@ -68,10 +68,9 @@ const dateSetter = {
 })
 
 app.get("/api", (req, res) => {
-  const date = new Date
   res.json({
-    unix: date * 1,
-    utc: date.toUTCString()
+    unix: new Date() * 1,
+    utc: new Date().toUTCString()
   })
 })
 
