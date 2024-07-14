@@ -27,7 +27,7 @@ app.get("/api/hello", function (req, res) {
 
 app.get("/api/:date", (req, res) => {
   let date = req.params.date
-  //handle api/:date path functions 
+  //handle api/:date path functions to make work
 function identifyDate(date){
   let regString = `${new Date(date).toUTCString()} ${new Date(date).getMonth() + 1}`.replace(/,|\d\d:\d\d:\d\d /g, "")
   regString = regString.split(" ").map(x => Number(x) ? x.split("").join('|') : x ).join('|')
