@@ -29,12 +29,15 @@ app.get("/api/:date", (req, res) => {
   let date = req.params.date
   //handle api/:date path functions 
 function identifyDate(date){
-  const lookForGroups = date.match(/\d+/g)
-  const specialCase = new Date(`${date}`)
+  let regString = `${new Date(date).toUTCString()} ${new Date(date).getMonth() + 1}`.replace(/,|\d\d:\d\d:\d\d /g, "")
+  regString = regString.split(" ").map(x => Number(x) ? x.split("").join('|') : x ).join('|')
+  const regExp = new RegExp(`${regString}|-`, 'g')
 
-  if(specialCase == "Invalid Date" || lookForGroups.length > 3) return "Sus Thing!" 
-  else if(lookForGroups.length == 1 ) return "unix Date" 
-  else if(specialCase != "Invalid Date" && lookForGroups.length > 1) return "Normal Date"
+  const invoke = () => Number.isInteger(Number(date)) ? Number(date) : date.replace(regExp, "")  
+
+  if(invoke().length > 0) return "Sus Thing!" 
+  else if(invoke()) return "unix Date" 
+  else if(invoke().length < 1) return "Normal Date"
   
 }
 
