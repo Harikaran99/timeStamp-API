@@ -27,14 +27,18 @@ app.get("/api/hello", function (req, res) {
 
 app.get("/api/:date", (req, res) => {
   let date = req.params.date
+  console.log("    date=> "+ date)
   //handle api/:date path functions to make work
 function identifyDate(date){
-  let regString = `${new Date(date).toUTCString()} ${new Date(date).getMonth() + 1}`.replace(/,|\d\d:\d\d:\d\d /g, "")
+  let regString = `${new Date(date).toLocaleString('default', { month: 'long' })} ${new Date(date).toUTCString()} ${new Date(date).getMonth() + 1}`.replace(/,|\d\d:\d\d:\d\d /g, "")
+  console.log(regString)
   regString = regString.split(" ").map(x => Number(x) ? x.split("").join('|') : x ).join('|')
-  const regExp = new RegExp(`${regString}|-`, 'g')
+  console.log("    regString 2 =>>> "+ regString)
+  const regExp = new RegExp(`${regString}|-|,| `, 'g')
+  console.log("    regExp 2 =>>> "+ regExp)
 
   const invoke = () => Number.isInteger(Number(date)) ? Number(date) : date.replace(regExp, "")  
-
+  console.log(" =====>>>>>fun   "+ invoke() +  "    " + date )
   if(invoke().length > 0) return "Sus Thing!" 
   else if(invoke()) return "unix Date" 
   else if(invoke().length < 1) return "Normal Date"
